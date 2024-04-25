@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.menu-item {
+    @apply py-4 px-3 relative text-neutral-600 font-sans text-sm cursor-pointer leading-5 opacity-100 font-normal hover:font-bold hover:bg-transparent hover:text-blue-indigo after:absolute after:bottom-0 after:left-0 after:bg-blue-indigo after:h-1 after:transition-all after:ease-in-out after:duration-300;
+    transition: all 0.3s ease-in-out;
+}
+
+
+
+.menu-item::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px;
+    background: #667eea;
+    transition: width .3s;
+}
+
+.menu-item:hover::after {
+    width: 100%;
+    transition-delay: .3s;
+}
