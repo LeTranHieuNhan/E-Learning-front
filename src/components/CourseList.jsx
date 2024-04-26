@@ -3,9 +3,9 @@ import Course from "./Course.jsx";
 
 const CourseList = () => {
     return (
-        <div className="flex justify-between ">
+        <div className="flex justify-around xl:gap-4  ">
             {
-                [1,1,1,1,].map((item,index) => {
+                [1,1,1,1,1].map((item,index) => {
                     return <Course key={index}/>
                 })
             }

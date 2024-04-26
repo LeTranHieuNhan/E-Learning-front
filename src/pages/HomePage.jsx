@@ -6,7 +6,7 @@ import Footer from "../components/Footer.jsx";
 const HomePage = () => {
     return (
         <>
-        <div className="lg:mx-96 md:mx-56 ">
+        <div className="container mx-auto px-12     ">
             <CourseCustomSection sectionName="Recommended for you"/>
             <AdvertisementSection/>
             <CourseCustomSection sectionName="Popular course"/>

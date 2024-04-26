@@ -1,5 +1,5 @@
 import React from "react";
-import {Outlet} from "react-router-dom";
+import {Link, Outlet} from "react-router-dom";
 import UserDropdown from "./UserDropdown.jsx";
 import {Searching} from "./Searching.jsx";
 
@@ -9,7 +9,11 @@ const Header = () => {
             <div className="flex justify-between  top-0  h-14 bg-white rounded-none shadow-xs border-2 mb-9 sticky ">
                 {/* For left side  */}
                 <div className="flex gap-10    ">
-                    <h2 className="text-3xl py-2 text-blue-600 font-bold ml-6  ">Ceetech</h2>
+                    <Link to="/">
+
+                        <img src="https://flowbite.com/docs/images/logo.svg" className="h-11 w-32 mt-1"
+                             alt="FlowBite Logo"/>
+                    </Link>
 
 
                     <ul className="flex gap-8 ">

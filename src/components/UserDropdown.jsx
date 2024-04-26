@@ -30,11 +30,11 @@ const UserDropdown = () => {
             {/* Dropdown menu */}
             <div
                 id="userDropdown"
-                className={`absolute top-12 right-0 z-10 ${isDropdownVisible ? 'inline' : 'hidden'} rounded-lg`}
+                className={`absolute top-12 right-0 z-10 ${isDropdownVisible ? 'inline' : 'hidden'} rounded-lg z-100`}
                 role="menu"
                 aria-labelledby="avatarButton"
             >
-                <div className="bg-transparent shadow-xl">
+                <div className=" shadow-2xl rounded-xl mt-2 bg-[whitesmoke] z-auto  ">
 
                     {/* User info */}
                     <div className="px-4 py-3 text-sm text-gray-900">
@@ -43,23 +43,23 @@ const UserDropdown = () => {
                     </div>
 
                     {/* Menu items */}
-                    <ul className="py-2 text-sm text-gray-700" role="none">
+                    <ul className="py-2 text-sm text-gray-700 px-2" role="none">
                     <li role="menuitem" className="flex items-center">
-                            <VscAccount />
+                            <VscAccount className="h-4 w-4" />
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100">My Profile</a>
                         </li>
                         <li role="menuitem" className="flex items-center">
-                            <TfiAlarmClock />
+                            <TfiAlarmClock className="h-4 w-4" />
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100">Alert</a>
                         </li>
                         <li role="menuitem" className="flex items-center">
-                            <MdOutlineSettings className="mr-1" />
+                            <MdOutlineSettings className=" h-4 w-4" />
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100">Settings</a>
                         </li>
                     </ul>
 
                     {/* Sign out */}
-                    <div className="py-1 flex items-center" role="menuitem">
+                    <div className="py-1 flex items-center px-1.5" role="menuitem">
                         <MdLogout className="ml-1" />
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                     </div>
