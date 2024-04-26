@@ -1,4 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import {MdOutlineSettings, MdLogout } from "react-icons/md";
+import { VscAccount } from "react-icons/vsc";
+import { TfiAlarmClock } from "react-icons/tfi";
+
 
 const UserDropdown = () => {
     // State to manage the visibility of the dropdown
@@ -10,7 +14,7 @@ const UserDropdown = () => {
     };
 
     return (
-        <div className="py-2 flex">
+        <div className="relative py-2 flex">
             {/* Avatar button */}
             <img
                 id="avatarButton"
@@ -26,34 +30,37 @@ const UserDropdown = () => {
             {/* Dropdown menu */}
             <div
                 id="userDropdown"
-                className={`z-10 ${isDropdownVisible ? 'inline' : 'hidden'}  rounded-lg `}
+                className={`absolute top-12 right-0 z-10 ${isDropdownVisible ? 'inline' : 'hidden'} rounded-lg`}
                 role="menu"
                 aria-labelledby="avatarButton"
             >
-                <div className="bg-transparent shadow-xl ">
-
+                <div className="bg-transparent shadow-xl">
 
                     {/* User info */}
                     <div className="px-4 py-3 text-sm text-gray-900">
-                        <div>Bonnie Green</div>
-                        <div className="font-medium truncate">name@flowbite.com</div>
+                        <div className="font-bold">Bonnie Green</div>
+                        <div className="font-xs truncate">name@flowbite.com</div>
                     </div>
 
                     {/* Menu items */}
                     <ul className="py-2 text-sm text-gray-700" role="none">
-                        <li role="menuitem">
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+                    <li role="menuitem" className="flex items-center">
+                            <VscAccount />
+                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">My Profile</a>
                         </li>
-                        <li role="menuitem">
+                        <li role="menuitem" className="flex items-center">
+                            <TfiAlarmClock />
+                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">Alert</a>
+                        </li>
+                        <li role="menuitem" className="flex items-center">
+                            <MdOutlineSettings className="mr-1" />
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100">Settings</a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">Earnings</a>
                         </li>
                     </ul>
 
                     {/* Sign out */}
-                    <div className="py-1" role="menuitem">
+                    <div className="py-1 flex items-center" role="menuitem">
+                        <MdLogout className="ml-1" />
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                     </div>
                 </div>
@@ -73,7 +80,6 @@ const UserDropdown = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
             </svg>
         </div>
-
     );
 };
 
