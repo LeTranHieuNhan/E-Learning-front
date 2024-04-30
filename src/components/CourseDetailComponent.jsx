@@ -2,6 +2,7 @@ import {CourseImagesSection} from "./CourseImagesSection.jsx";
 import TabComponent from "./TabComponent.jsx";
 import {useState} from "react";
 import CourseDescription from "./CourseDescription.jsx";
+import {Link} from "react-router-dom";
 
 export const CourseDetailComponent = () => {
     const [activeTab, setActiveTab] = useState('Reviews'); // Set initial active tab
@@ -55,6 +56,8 @@ export const CourseDetailComponent = () => {
                     )}
                 </div>
                 <div className="mt-4 absolute left-2/3 z-0 ">
+                    <Link to="/teacher/1">
+
                     <div className="flex gap-3">
                         <img
                             className="rounded-full h-11 w-11"
@@ -65,6 +68,8 @@ export const CourseDetailComponent = () => {
                             <span className="text-orange-500 bg-[#FFF4F0FF] text-[11px] h-6 w-4 p-2 rounded-2xl ">Top teacher</span>
                         </div>
                     </div>
+                    </Link>
+
                     <div className="bg-neutral-50 w-[380px] p-6 mt-5 z-0 ">
                         <div className="flex  justify-between ">
                             <h3 className="truncate font-sora text-[16px] font-bold text-ellipsis overflow-hidden whitespace-nowrap w-2/3">UX:

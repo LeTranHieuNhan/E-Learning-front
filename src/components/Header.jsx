@@ -6,12 +6,12 @@ import {Searching} from "./Searching.jsx";
 const Header = () => {
     return (
         <>
-            <div className="flex justify-between  top-0  h-14 bg-white rounded-none shadow-xs border-2 mb-9 sticky ">
+            <div className="flex justify-between  top-0  h-14 bg-white rounded-none shadow-xs border-2 mb-9 sticky  z-50">
                 {/* For left side  */}
                 <div className="flex gap-10    ">
                     <Link to="/">
 
-                        <img src="https://flowbite.com/docs/images/logo.svg" className="h-11 w-32 mt-1"
+                        <img src="https://flowbite.com/docs/images/logo.svg" className="h-10 w-30 mt-1 ml-12"
                              alt="FlowBite Logo"/>
                     </Link>
 
