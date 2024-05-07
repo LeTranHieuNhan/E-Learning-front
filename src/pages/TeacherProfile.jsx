@@ -20,7 +20,7 @@ export const TeacherProfile = () => {
 
 
                     </div>
-                    <div className="col-span-3 p-4 b  ">
+                    <div className="col-span-3 p-4   ">
                         <div
                             className="bg-gray-50 border shadow-sm p-8 relative font-sans  justify-center flex flex-col gap-2  ">
                             <button

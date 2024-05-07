@@ -6,6 +6,7 @@ import CourseDetail from "./pages/CourseDetail";
 import CourseAssignment from "./pages/CourseAssignment";
 import UserProfile from "./pages/UserProfile";
 import {TeacherProfile} from "./pages/TeacherProfile.jsx";
+import VideoCoursePage from "./pages/VideoCoursePage.jsx";
 
 function App() {
     return (
@@ -15,9 +16,13 @@ function App() {
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="course/:id" element={<CourseDetail/>}/>
                 <Route path="teacher/:id" element={<TeacherProfile/>}/>
+
+                <Route path ="course/:id/:videoId" element={<VideoCoursePage/>}/>
+
                 <Route path="/CourseAssignment" element={<CourseAssignment />} />
                 <Route path="/AssignDes" element={<AssignDes />} />
                 <Route path="/UserProfile" element={<UserProfile />} />
+
             </Routes>
         </BrowserRouter>
     );
