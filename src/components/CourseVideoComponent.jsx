@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
-import Video from "../assets/video/test.mp4"
+
 const CourseVideoComponent = () => {
     return (
         <div>
@@ -16,11 +16,9 @@ const CourseVideoComponent = () => {
                 </span>
             </div>
             <div className="grid grid-cols-10 gap-4 mt-4">
-                <div className="col-span-7 h-[520px] border">
+                <div className="col-span-7 h-[620px]">
                     <ReactPlayer
-
-
-                        url={Video}
+                        url="https://www.youtube.com/watch?v=7wtfhZwyrcc" // Specify the YouTube video URL
                         controls // Add controls to the player
                         width="100%" // Set the player width
                         height="100%" // Set the player height
