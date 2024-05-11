@@ -65,7 +65,7 @@ const CourseAssignment = () => {
               />
             </svg>
             <Link to="/AssignDes">
-              <div className="ml-[9px] ">
+              <div className="ml-[9px] cursor-pointer ">
                 <h1>Exploring the Ethicl Implications of l in Healthcare</h1>
                 <h1 className="text-[#9095A0FF]">AI Class</h1>
                 <h1 className="text-[#9095A0FF]">uploaded Today</h1>

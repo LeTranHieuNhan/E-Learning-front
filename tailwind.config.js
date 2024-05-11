@@ -1,8 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 import withMT from "@material-tailwind/html/utils/withMT";
+const flowbite = require("flowbite-react/tailwind");
 
 export default withMT ({
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"
+
+  ,flowbite.content()
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -20,5 +24,6 @@ export default withMT ({
        },
     },
   },
-  plugins: [],
+  plugins: [    flowbite.plugin(),
+  ],
 });

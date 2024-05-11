@@ -5,7 +5,6 @@ import ReviewSection from "../components/ReviewSection.jsx";
 import {CourseCustomSection} from "../components/CourseCustomSection.jsx";
 
 const CourseDetail = () => {
-    console.log("CourseDetail")
     return (
         <>
             <div className="mx-64 my-0">
