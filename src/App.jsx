@@ -7,6 +7,8 @@ import CourseAssignment from "./pages/CourseAssignment";
 // import UserProfile from "./pages/UserProfile";
 import {TeacherProfile} from "./pages/TeacherProfile.jsx";
 import VideoCoursePage from "./pages/VideoCoursePage.jsx";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 function App() {
     return (
@@ -20,6 +22,8 @@ function App() {
                 <Route path="/AssignDes" element={<AssignDes />} />
                 {/*<Route path="/UserProfile" element={<UserProfile />} />*/}
                 <Route path ="course/:id/:videoId" element={<VideoCoursePage/>}/>
+                <Route path="/SignIn" element={<SignIn />} />
+                <Route path="/SignUp" element={<SignUp />} />
 
             </Routes>
         </BrowserRouter>
