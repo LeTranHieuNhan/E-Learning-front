@@ -119,7 +119,7 @@ const SignIn = () => {
             </button>
           </div>
         </form>
-        <div className="w-full gap-4 mb-2 lg:mb-0 mt-[20px] flex">
+        <div className="w-full gap-4 mb-2 lg:mb-0 mt-[20px] flex p-8">
           <button
             type="button"
             className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-[18px] hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
