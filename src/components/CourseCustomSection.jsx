@@ -1,8 +1,25 @@
 import CourseList from "./CourseList.jsx";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 export const CourseCustomSection = ({sectionName}) => {
+    const [courses, setCourses] = useState([]);
+    useEffect(() => {
+        // Function to fetch courses from the API
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/v1/courses');
+                setCourses(response.data);
+                console.log('Courses:', response.data)
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            }
+        };
+
+        fetchCourses(); // Call fetchCourses function when component mounts
+    }, []);
     return (
-        <div >
+        <div>
             <div className="flex justify-between mb-4">
                 <h2 className="font-sora text-2xl font-bold">{sectionName}</h2>
                 <div className="flex gap-4 py-2 px-2">
@@ -17,7 +34,7 @@ export const CourseCustomSection = ({sectionName}) => {
 
                 </div>
             </div>
-            <CourseList/>
+            <CourseList  courses={courses}/>
 
         </div>
     )

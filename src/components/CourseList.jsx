@@ -1,15 +1,17 @@
-import React from 'react'
+import React from 'react';
 import Course from "./Course.jsx";
 
-const CourseList = () => {
+const CourseList = ({ courses }) => {
+    if (!Array.isArray(courses)) {
+        return <div>No courses available</div>; // Return a message if courses is not an array
+    }
+
     return (
-        <div className="flex justify-around xl:gap-4  ">
-            {
-                [1,1,1,1,1].map((item,index) => {
-                    return <Course key={index}/>
-                })
-            }
+        <div className="flex justify-around xl:gap-4">
+            {courses.map((course, index) => (
+                <Course key={index} course={course} />
+            ))}
         </div>
-    )
+    );
 }
-export default CourseList
+export default CourseList;
