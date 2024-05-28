@@ -1,9 +1,8 @@
-// courseReducer.js
-
 import * as actionTypes from "./actionTypes.js";
 
 const initialState = {
-    courses: []
+    courses: [],
+    selectedCourse: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,6 +11,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 courses: action.courses
+            };
+        case actionTypes.GET_COURSE_BY_ID_SUCCESS:
+            return {
+                ...state,
+                selectedCourse: action.selectedCourse
             };
         default:
             return state;

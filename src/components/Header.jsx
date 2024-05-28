@@ -1,12 +1,29 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link, Outlet} from "react-router-dom";
 import UserDropdown from "./UserDropdown.jsx";
 import {Searching} from "./Searching.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getUserByTokenAction, LOGOUT} from "../redux/authActions.js";
 
 const Header = () => {
+    const { isAuthenticated, token } = useSelector((state) => state.auth);
+    const user = useSelector((state) => state.auth.user);
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        // Fetch user data when component mounts if the user is authenticated
+        if (isAuthenticated && token) {
+            dispatch(getUserByTokenAction(token));
+        }
+    }, [dispatch, isAuthenticated, token]);
+
+    const handleLogout = () => {
+        dispatch({ type: LOGOUT });
+    };
     return (
         <>
-            <div className="flex justify-between  top-0  h-14 bg-white rounded-none shadow-xs border-2 mb-9 sticky  z-50">
+            <div
+                className="flex justify-between  top-0  h-14 bg-white rounded-none shadow-xs border-2 mb-9 sticky  z-50">
                 {/* For left side  */}
                 <div className="flex gap-10    ">
                     <Link to="/">
@@ -42,7 +59,20 @@ const Header = () => {
 
                     </div>
                     {/*User dropdown*/}
-                    <UserDropdown/>
+                    {  isAuthenticated   ? (
+                        <UserDropdown user = {user} handleLogout={handleLogout}/>
+                    ) : (
+                        <div className=" font-sans flex gap-3">
+                            <Link to="/SignIn">
+
+                            <button className="text-sm font-bold border px-2 w-24 bg-blue-indigo text-white rounded-lg h-10 items-center mt-1 ">Sign in</button>
+                            </Link>
+                            <Link to="/SignUp">
+
+                            <button className="text-sm font-bold    px-2 w-24 h-10 mt-1 border border-gray-600  bg-text-gray-600 rounded-lg" >Sign up</button>
+                            </Link>
+                        </div>
+                    )}
 
 
                 </div>

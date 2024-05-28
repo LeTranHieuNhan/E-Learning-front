@@ -10,7 +10,6 @@ export const CourseCustomSection = ({sectionName}) => {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/courses');
                 setCourses(response.data);
-                console.log('Courses:', response.data)
             } catch (error) {
                 console.error('Error fetching courses:', error);
             }

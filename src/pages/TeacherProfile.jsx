@@ -4,15 +4,26 @@ import TeacherProfileSection from "../components/TeacherProfileSection.jsx";
 import Image26 from "../assets/img/Image 26.png";
 import {TeacherCourseSection} from "../components/TeacherCourseSection.jsx";
 import StarIcon from "../components/StarIcon.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {useEffect} from "react";
+import {fetchUserById} from "../redux/userAction.js";
 
 export const TeacherProfile = () => {
+    const dispatch = useDispatch();
+    const {id} = useParams();
+    const user = useSelector(state => state.course.user.user);
+    console.log(user);
+    useEffect(() => {
+        dispatch(fetchUserById(id));
+    }, [dispatch, id]);
     return (
         <>
             <div className="mx-auto container">
 
                 <div className="grid grid-cols-10 gap-4">
                     <div className="col-span-7   p-4">
-                        <TeacherProfileSection/>
+                        <TeacherProfileSection user ={user} />
 
 
                         {/*    */}

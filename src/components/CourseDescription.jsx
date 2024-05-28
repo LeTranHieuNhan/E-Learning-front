@@ -1,21 +1,10 @@
 import React from 'react'
 
-const CourseDescription = () => {
+const CourseDescription = ({course}) => {
     return (
         <div className="break-work 2xl:w-[760px] xl:w-[500px] md:w-[300px]  font-sans text-neutral-900 ">
             <p >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem lorem aliquam sed lacinia quis. Nibh
-                dictumst
-                vulputate odio pellentesque sit quis ac, sit ipsum. Sit rhoncus velit in sed massa arcu sit eu. Vitae et
-                vitae eget lorem non dui. Sollicitudin ut mi adipiscing duis.
-
-                Convallis in semper laoreet nibh leo. Vivamus malesuada ipsum pulvinar non rutrum risus dui, risus.
-                Purus
-                massa velit iaculis tincidunt tortor, risus, scelerisque risus. In at lorem pellentesque orci aenean
-                dictum
-                dignissim in. Aenean pulvinar diam interdum ullamcorper. Vel urna, tortor, massa metus purus metus.
-                Maecenas
-                mollis in velit auctor cursus scelerisque eget. Nibh faucibus purus elementum ultrices elementum, urna.
+                {course?.description}
             </p>
             <div className="mt-10">
                 <h3 className="font-bold font-sora text-xl">Benefits</h3>

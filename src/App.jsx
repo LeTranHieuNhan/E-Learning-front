@@ -19,7 +19,7 @@ function App() {
         <BrowserRouter>
             <Header/>
             <Routes>
-                <Route path="/" element={<HomePage/>}/>
+                <Route path="/" index element={<HomePage/>}/>
                 <Route path="course/:id" element={<CourseDetail/>}/>
                 <Route path="teacher/:id" element={<TeacherProfile/>}/>
                 <Route path="/CourseAssignment" element={<CourseAssignment />} />

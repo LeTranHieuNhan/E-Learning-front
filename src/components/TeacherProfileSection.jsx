@@ -1,7 +1,7 @@
 import React from 'react'
 import J1 from "../assets/img/J1.jpg";
 
-const TeacherProfileSection = () => {
+const TeacherProfileSection = ({user}) => {
     return (
         <div className=" flex  flex-col  bg-whitesmokle border shadow-sm p-7 ">
 
@@ -11,8 +11,8 @@ const TeacherProfileSection = () => {
                     <div className="flex gap-4">
                         <img src={J1} alt="" className="bg-[#FFD5C3FF] w-24 h-24 rounded-full"/>
                         <div className="font-sans ">
-                            <h2 className="text-xl font-bold font-sora">Lucifer</h2>
-                            <span className="text-sm text-neutral-700">Senior UI/UX Designer</span>
+                            <h2 className="text-xl font-bold font-sora">{user.name}</h2>
+                            <span className="text-sm text-neutral-700">{user.role.name}</span>
                             <span className="flex mt-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                  stroke-width="1.5" stroke="currentColor"

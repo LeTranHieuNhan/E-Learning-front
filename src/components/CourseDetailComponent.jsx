@@ -4,12 +4,12 @@ import { useState } from "react";
 import CourseDescription from "./CourseDescription.jsx";
 import { Link } from "react-router-dom";
 
-export const CourseDetailComponent = () => {
+export const CourseDetailComponent = ({ course }) => {
     const [activeTab, setActiveTab] = useState('Reviews'); // Set initial active tab
-
+    console.log(course)
     return (
         <div>
-            <h1 className="font-sora text-3xl font-bold text-neutral-900 mb-4 ">UI Design, A User-Centered Approach</h1>
+            <h1 className="font-sora text-3xl font-bold text-neutral-900 mb-4 ">{course?.title}</h1>
             <div className="flex justify-between mb-6 ">
                 <div className="flex gap-1 mb-8">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -20,7 +20,7 @@ export const CourseDetailComponent = () => {
                     </svg>
                     <span className="font-sans text-sm font-bold">4.5</span>
                     <span className="font-sans text-sm text-neutral-500">(99 reviews)</span>
-                    <span className="text-blue-indigo font-sans text-sm cursor-pointer">| Lucifer</span>
+                    <span className="text-blue-indigo font-sans text-sm cursor-pointer">{course?.user?.name}</span>
                 </div>
                 <button
                     className="flex p-3 gap-1.5 h-10 w-[97px]  bg-primary-100 text-blue-indigo rounded-lg justify-center ">
@@ -40,7 +40,7 @@ export const CourseDetailComponent = () => {
             <div className="flex justify-between   ">
                 <div className="tab-content mt-4 ">
                     {activeTab === 'Class description' && (
-                        <CourseDescription />
+                        <CourseDescription course = {course} />
                     )}
                     {activeTab === 'Reviews' && (
                         <div className="mb-96">
@@ -64,7 +64,7 @@ export const CourseDetailComponent = () => {
                                 src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1"
                                 alt="" />
                             <div className="font-sans  ">
-                                <h3 className="font-sans font-bold  text-[16px]  text-neutral-900">Lucifer</h3>
+                                <h3 className="font-sans font-bold  text-[16px]  text-neutral-900">{course?.user?.name}</h3>
                                 <span className="text-orange-500 bg-[#FFF4F0FF] text-[11px] h-6 w-4 p-2 rounded-2xl ">Top teacher</span>
                             </div>
                         </div>
@@ -72,9 +72,7 @@ export const CourseDetailComponent = () => {
 
                     <div className="bg-neutral-50 w-[380px] p-6 mt-5 z-0 ">
                         <div className="flex  justify-between ">
-                            <h3 className="truncate font-sora text-[16px] font-bold text-ellipsis overflow-hidden whitespace-nowrap w-2/3">UX:
-                                Design with a User with
-                                different kind of qualitydasdasdasa</h3>
+                            <h3 className="truncate font-sora text-[16px] font-bold text-ellipsis overflow-hidden whitespace-nowrap w-2/3">{course.title}</h3>
 
                             <div className="flex">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -92,7 +90,7 @@ export const CourseDetailComponent = () => {
                         <div className="flex mt-[22px]  justify-between ">
                             <h2 className=" font-sans text-sm text-neutral-900 ">
                                 Course (12 lessons)</h2>
-                            <h2 className=" font-sans text-sm text-neutral-900 font-bold ">12 weeks</h2>
+                            <h2 className=" font-sans text-sm text-neutral-900 font-bold ">{course.course_duration}</h2>
 
                         </div>
                         <div className="flex mt-[22px]  justify-between ">
