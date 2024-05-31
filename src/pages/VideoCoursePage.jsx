@@ -1,20 +1,34 @@
-import React, { useState } from 'react'
-import Course from "../components/Course.jsx";
+import React, {useEffect, useState} from 'react'
 import CourseVideoComponent from "../components/CourseVideoComponent.jsx";
-import TabComponent from '../components/TabComponent.jsx';
 import Disscussion from '../components/Disscussion.jsx';
 import Footer from "../components/Footer.jsx";
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchAllStudentSessions} from "../redux/StudentSessionsAction.js";
 
 const VideoCoursePage = () => {
     const [activeTab, setActiveTab] = useState('Discussions'); // Set initial active tab
+    const [videoId, setVideoId] = useState(''); // Set initial active tab
+    const studentSessions = useSelector(state => state?.course);
+    const user = useSelector(state => state?.auth);
+    const dispatch = useDispatch();
+    const {id} = useParams();
+    console.log(studentSessions)
+    useEffect(() => {
+
+        dispatch(fetchAllStudentSessions(id,user?.id));
+    }, [dispatch, videoId]);
+    console.log(user)
+
 
     const handleClick = (tabName) => {
         setActiveTab(tabName); // Update the active tab state
     };
+
     return (
         <>
             <div className="mx-auto container ">
-                <CourseVideoComponent />
+                <CourseVideoComponent courseSessions ={null} />
 
                 <div className='mt-6 pb-12'>
                     <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 ">
@@ -25,7 +39,7 @@ const VideoCoursePage = () => {
                                     className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab === 'Summary'
                                         ? 'text-blue-indigo font-bold border-blue-indigo'
                                         : 'border-transparent'
-                                        }`}
+                                    }`}
                                     onClick={() => handleClick('Summary')}
                                 >
                                     Summary
@@ -37,7 +51,7 @@ const VideoCoursePage = () => {
                                     className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'Discussions'
                                         ? 'text-blue-indigo font-bold border-blue-indigo'
                                         : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-                                        }`}
+                                    }`}
                                     onClick={() => handleClick('Discussions')}
                                     aria-current={activeTab === 'Discussions' ? 'page' : undefined}
                                 >
@@ -50,7 +64,7 @@ const VideoCoursePage = () => {
                                     className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab === 'Resources & documents'
                                         ? 'text-blue-indigo font-bold border-blue-indigo'
                                         : 'border-transparent'
-                                        }`}
+                                    }`}
                                     onClick={() => handleClick('Resources & documents')}
                                 >
                                     Resources & documents
@@ -63,7 +77,7 @@ const VideoCoursePage = () => {
                                     className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab === 'Transcript'
                                         ? 'text-blue-indigo font-bold border-blue-indigo'
                                         : 'border-transparent'
-                                        }`}
+                                    }`}
                                     onClick={() => handleClick('Transcript')}
                                 >
                                     Transcript
@@ -77,7 +91,7 @@ const VideoCoursePage = () => {
 
                 </div>
                 {activeTab === 'Discussions' && (
-                    <Disscussion />
+                    <Disscussion/>
                 )}
                 {activeTab === 'Summary' && (
                     <div className="mb-96">
@@ -94,7 +108,7 @@ const VideoCoursePage = () => {
 
 
             </div>
-            <Footer />
+            <Footer/>
 
         </>
     )

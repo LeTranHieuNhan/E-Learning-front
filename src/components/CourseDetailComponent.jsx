@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 export const CourseDetailComponent = ({ course }) => {
     const [activeTab, setActiveTab] = useState('Reviews'); // Set initial active tab
+
     console.log(course)
     return (
         <div>
@@ -18,8 +19,8 @@ export const CourseDetailComponent = ({ course }) => {
                             d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
                             clip-rule="evenodd" />
                     </svg>
-                    <span className="font-sans text-sm font-bold">4.5</span>
-                    <span className="font-sans text-sm text-neutral-500">(99 reviews)</span>
+                    <span className="font-sans text-sm font-bold">{course?.averageRating == null ? 4.5 : course.averageRating.toFixed(2)}</span>
+                    <span className="font-sans text-sm text-neutral-500">({course.totalReviews == null ? 0 : course.totalReviews} reviews)</span>
                     <span className="text-blue-indigo font-sans text-sm cursor-pointer">{course?.user?.name}</span>
                 </div>
                 <button
@@ -109,7 +110,7 @@ export const CourseDetailComponent = ({ course }) => {
                             <h3 className="font-sans text-sm text-neutral-900 font-bold ">Total</h3>
                             <h3 className="text-xl text-blue-indigo font-bold font-sans ">Free</h3>
                         </div>
-                        <Link to='/course/2/2'>
+                        <Link to={`/course/${course?.id}/1`}>
                             <button
                                 className="w-full h-10 bg-blue-indigo text-white rounded-lg mt-4 font-sans font-bold">Enroll
                                 now

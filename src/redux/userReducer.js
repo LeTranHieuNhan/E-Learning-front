@@ -36,6 +36,12 @@ const userReducer = (state = initialState, action) => {
                 user: action.user,
                 error: null
             };
+        case actionTypes.FETCH_TEACHER_PROFILE_SUCCESS:
+            return {
+                ...state,
+                user: action.user,
+                error: null
+            };
         case actionTypes.LOGOUT_USER:
             return {
                 ...state,

@@ -100,3 +100,20 @@ export const deleteUser = (userId) => {
 export const logoutUser = () => ({
     type: actionTypes.LOGOUT_USER
 });
+export const fetchTeacherProfileSuccess = (user) => ({
+    type: actionTypes.FETCH_TEACHER_PROFILE_SUCCESS,
+    user
+});
+
+export const fetchTeacherProfileFailure = (error) => ({
+    type: actionTypes.FETCH_TEACHER_PROFILE_FAILURE,
+    error
+});
+
+export const fetchTeacherProfile = (teacherId) => {
+    return dispatch => {
+        axiosInstance.get(`/users/teacher/${teacherId}`)
+            .then(response => dispatch(fetchTeacherProfileSuccess(response.data)))
+            .catch(error => dispatch(fetchTeacherProfileFailure(error.message)));
+    };
+};

@@ -62,8 +62,8 @@ const UserDropdown = ({handleLogout , user} ) => {
                 <div className="shadow-2xl rounded-xl mt-2 bg-[whitesmoke] z-auto">
                     {/* User info */}
                     <div className="px-4 py-3 text-sm text-gray-900">
-                        <div className="font-bold">{user.name}</div>
-                        <div className="font-xs truncate">{user.email}</div>
+                        <div className="font-bold">{user?.name}</div>
+                        <div className="font-xs truncate">{user?.email}</div>
                     </div>
 
                     {/* Menu items */}

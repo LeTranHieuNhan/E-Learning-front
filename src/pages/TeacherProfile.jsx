@@ -7,16 +7,17 @@ import StarIcon from "../components/StarIcon.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {useEffect} from "react";
-import {fetchUserById} from "../redux/userAction.js";
+import {fetchTeacherProfile} from "../redux/userAction.js";
 
 export const TeacherProfile = () => {
     const dispatch = useDispatch();
     const {id} = useParams();
     const user = useSelector(state => state.course.user.user);
-    console.log(user);
+    console.log(id)
     useEffect(() => {
-        dispatch(fetchUserById(id));
+        dispatch(fetchTeacherProfile(id));
     }, [dispatch, id]);
+    console.log(user)
     return (
         <>
             <div className="mx-auto container">
