@@ -1,7 +1,7 @@
 import {FETCH_ALL_STUDENT_SESSIONS_SUCCESS} from "./actionTypes.js";
 
 const initialState = {
-    courseSessions: [],
+    studentSessions: [],
     loading: true,
     error: null
 };

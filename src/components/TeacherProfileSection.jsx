@@ -49,22 +49,22 @@ const TeacherProfileSection = ({user}) => {
                         <div className="flex mt-6 font-sans gap-11 ">
                             <div className="flex flex-col ">
                                 <span className="text-sm text-neutral-600">Rating</span>
-                                <span className="font-bold">{user.averageRating == null ? 3.2 : user.averageRating}</span>
+                                <span className="font-bold">{user?.averageRating == null ? 3.2 : user?.averageRating}</span>
                             </div>
 
                             <div className="flex flex-col ">
                                 <span className="text-sm text-neutral-600">Reviews</span>
-                                <span className="font-bold">{user.totalReviews}</span>
+                                <span className="font-bold">{user?.totalReviews}</span>
                             </div>
 
                             <div className="flex flex-col ">
                                 <span className="text-sm text-neutral-600">Courses</span>
-                                <span className="font-bold">{user.totalCourses}</span>
+                                <span className="font-bold">{user?.totalCourses}</span>
                             </div>
 
                             <div className="flex flex-col ">
                                 <span className="text-sm text-neutral-600">Students</span>
-                                <span className="font-bold">{user.totalStudents}</span>
+                                <span className="font-bold">{user?.totalStudents}</span>
                             </div>
 
                         </div>

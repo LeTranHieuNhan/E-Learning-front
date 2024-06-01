@@ -12,8 +12,9 @@ export const fetchAllStudentSessionsSuccess = (studentSessions) => {
 export const fetchAllStudentSessions = (courseId,userId) => {
     return (dispatch) => {
         console.log('fetching course sessions')
-        return axiosInstance.get(`student_sessions/all?courseId=${courseId}&studentId=${userId}`)
+        return axiosInstance.get(`/student_sessions/all?courseId=1&studentId=2`)
             .then(response => {
+                // console.log(response.data);
                 dispatch(fetchAllStudentSessionsSuccess(response.data));
             })
             .catch(error => {

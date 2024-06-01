@@ -1,37 +1,35 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react';
 import CourseVideoComponent from "../components/CourseVideoComponent.jsx";
 import Disscussion from '../components/Disscussion.jsx';
 import Footer from "../components/Footer.jsx";
-import {useParams} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {fetchAllStudentSessions} from "../redux/StudentSessionsAction.js";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllStudentSessions } from "../redux/StudentSessionsAction.js";
 
 const VideoCoursePage = () => {
-    const [activeTab, setActiveTab] = useState('Discussions'); // Set initial active tab
-    const [videoId, setVideoId] = useState(''); // Set initial active tab
-    const studentSessions = useSelector(state => state?.course);
-    const user = useSelector(state => state?.auth);
+    const [activeTab, setActiveTab] = useState('Discussions');
+    const studentSessions = useSelector(state => state?.course?.studentSession?.studentSessions);
+    const user = useSelector(state => state?.auth?.user);
     const dispatch = useDispatch();
-    const {id} = useParams();
-    console.log(studentSessions)
+    const { id } = useParams();
+
     useEffect(() => {
-
-        dispatch(fetchAllStudentSessions(id,user?.id));
-    }, [dispatch, videoId]);
-    console.log(user)
-
+        if (id && user?.id)
+            dispatch(fetchAllStudentSessions(id, user?.id));
+    }, [dispatch, id, user?.id]);
+    console.log(studentSessions);
 
     const handleClick = (tabName) => {
-        setActiveTab(tabName); // Update the active tab state
+        setActiveTab(tabName);
     };
 
     return (
         <>
-            <div className="mx-auto container ">
-                <CourseVideoComponent courseSessions ={null} />
+            <div className="mx-auto container">
+            <CourseVideoComponent studentSessions ={studentSessions} />
 
                 <div className='mt-6 pb-12'>
-                    <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 ">
+                    <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
                         <ul className="flex flex-wrap -mb-px">
                             <li className="me-2">
                                 <a
@@ -70,7 +68,6 @@ const VideoCoursePage = () => {
                                     Resources & documents
                                 </a>
                             </li>
-
                             <li className="me-2">
                                 <a
                                     href="#"
@@ -83,15 +80,24 @@ const VideoCoursePage = () => {
                                     Transcript
                                 </a>
                             </li>
-
+                            <li className="me-2">
+                                <a
+                                    href="#"
+                                    className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab === 'Related Course'
+                                        ? 'text-blue-indigo font-bold border-blue-indigo'
+                                        : 'border-transparent'
+                                    }`}
+                                    onClick={() => handleClick('Related Course')}
+                                >
+                                    Related Course
+                                </a>
+                            </li>
                         </ul>
                     </div>
-
                     {/* Display content based on the active tab */}
-
                 </div>
                 {activeTab === 'Discussions' && (
-                    <Disscussion/>
+                    <Disscussion studentSessions={studentSessions} />
                 )}
                 {activeTab === 'Summary' && (
                     <div className="mb-96">
@@ -105,12 +111,9 @@ const VideoCoursePage = () => {
                         <p>This is the content for the Related Course tab.</p>
                     </div>
                 )}
-
-
             </div>
-            <Footer/>
-
+            <Footer />
         </>
     )
 }
-export default VideoCoursePage
+export default VideoCoursePage;
