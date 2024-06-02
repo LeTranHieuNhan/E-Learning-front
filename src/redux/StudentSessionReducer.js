@@ -1,4 +1,4 @@
-import {FETCH_ALL_STUDENT_SESSIONS_SUCCESS} from "./actionTypes.js";
+import { FETCH_ALL_STUDENT_SESSIONS_SUCCESS, MARK_AS_WATCHED } from "./actionTypes";
 
 const initialState = {
     studentSessions: [],
@@ -15,7 +15,13 @@ const studentSessionReducer = (state = initialState, action) => {
                 loading: false,
                 error: null
             };
-        // Add more cases for other action types as needed
+        case MARK_AS_WATCHED:
+            return {
+                ...state,
+                studentSessions: state.studentSessions.map(session =>
+                    session.courseSession.id === action.payload ? { ...session, status: 'WATCHED' } : session
+                )
+            };
         default:
             return state;
     }
