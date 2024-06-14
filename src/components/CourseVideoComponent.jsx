@@ -13,6 +13,8 @@ const CourseVideoComponent = () => {
     }, [studentSessions]);
 
     const [currentSession, setCurrentSession] = useState(null);
+    const [videoDuration, setVideoDuration] = useState(0); // State to store video duration
+    const [isWatched, setIsWatched] = useState(false); // State to track if video is marked as watched
 
     useEffect(() => {
         if (sortedSessions.length && !currentSession) {
@@ -23,7 +25,18 @@ const CourseVideoComponent = () => {
 
     const handleSessionClick = (session) => {
         setCurrentSession(session.courseSession);
-        dispatch(markAsWatched(session.id));
+    };
+
+    const handleDuration = (duration) => {
+        setVideoDuration(duration);
+    };
+
+    const handleProgress = ({ played }) => {
+        if (played > 0.3 && !isWatched) {
+            console.log('Mark as watched')
+            dispatch(markAsWatched(currentSession.id));
+            setIsWatched(true);
+        }
     };
 
     return (
@@ -69,8 +82,10 @@ const CourseVideoComponent = () => {
                         controls
                         width="100%"
                         height="100%"
+                        onDuration={handleDuration} // Callback to get video duration
+                        onProgress={handleProgress} // Callback to track video progress
                     />
-                </div>
+                    </div>
                 <div className="col-span-3 p-4">
                     <div className="flex justify-between">
                         <h3 className="font-sora text-[#6E75D1FF] font-bold text-xl">Sessions</h3>
@@ -116,4 +131,3 @@ const CourseVideoComponent = () => {
 };
 
 export default CourseVideoComponent;
-``
