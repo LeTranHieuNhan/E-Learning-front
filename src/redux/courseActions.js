@@ -1,4 +1,4 @@
-import * as actionTypes from './actionTypes';
+    import * as actionTypes from './actionTypes';
 import axiosInstance from "./axiosInstance.js";
 
 export const fetchCoursesSuccess = (courses) => {

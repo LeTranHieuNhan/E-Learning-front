@@ -1,156 +1,276 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Label, TextInput } from "flowbite-react";
+import { useDispatch, useSelector } from 'react-redux';
+import { createComment, fetchComments, updateComment, deleteComment } from "../redux/commentActions.js";
+import { createReply, fetchRepliesByCommentId, updateReply, deleteReply } from "../redux/replyCommentActions.js";
 
-const Disscussion = () => {
+const formatDate = (date) => {
+    return new Date(date).toLocaleString();
+};
 
-    const [content, setContent] = useState('');
-    // Ref to access the textarea DOM element
+const Discussion = () => {
+    const [body, setBody] = useState('');
+    const [editBody, setEditBody] = useState('');
+    const [editId, setEditId] = useState(null);
+    const [replyBody, setReplyBody] = useState('');
+    const [replyEditBody, setReplyEditBody] = useState('');
+    const [replyEditId, setReplyEditId] = useState(null);
+    const [showReplyBox, setShowReplyBox] = useState(null);
     const textareaRef = useRef(null);
+    const dispatch = useDispatch();
+    const comments = useSelector(state => state?.course?.comment?.comments || []);
+    const courseSessionId = useSelector(state => state?.course?.studentSession?.studentSessions[0]?.courseSession?.id);
+    const userId = useSelector(state => state?.auth?.user?.id);
+    const userRole = useSelector(state => state?.auth?.user?.role);
+    const replyComments = useSelector(state => state?.course?.replyComment?.replies || {});
+    console.log(replyComments);
+    console.log(comments);
 
-    // Function to handle changes to the textarea content
+    useEffect(() => {
+        if (courseSessionId) {
+            dispatch(fetchComments(courseSessionId));
+        }
+    }, [dispatch, courseSessionId]);
+
     const handleInputChange = (event) => {
-        // Update the content state with the new value
-        setContent(event.target.value);
+        setBody(event.target.value);
     };
 
-    // Effect to adjust the height of the textarea when the content changes
+    const handleEditChange = (event) => {
+        setEditBody(event.target.value);
+    };
+
+    const handleReplyChange = (event) => {
+        setReplyBody(event.target.value);
+    };
+
+    const handleReplyEditChange = (event) => {
+        setReplyEditBody(event.target.value);
+    };
+
     useEffect(() => {
-        // Calculate the scrollHeight of the textarea
-        const scrollHeight = textareaRef.current.scrollHeight;
-        // Adjust the height of the textarea
-        textareaRef.current.style.height = 'auto';
-        textareaRef.current.style.height = `${scrollHeight}px`;
-    }, [content]);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [body]);
+
+    const handleCommentSubmit = () => {
+        if (!courseSessionId || !userId) {
+            alert('Course session ID or user ID is missing.');
+            return;
+        }
+
+        if (body.trim()) {
+            const newComment = { body };
+            dispatch(createComment(newComment, courseSessionId, userId));
+            setBody('');
+        }
+    };
+
+    const handleEditSubmit = (id) => {
+        if (editBody.trim()) {
+            dispatch(updateComment(id, { body: editBody }));
+            setEditId(null);
+            setEditBody('');
+        }
+    };
+
+    const handleReplySubmit = (commentId) => {
+        if (!courseSessionId || !userId) {
+            alert('Course session ID or user ID is missing.');
+            return;
+        }
+
+        if (replyBody.trim()) {
+            const newReply = { body: replyBody };
+            dispatch(createReply(newReply, commentId, userId))
+                .then(() => {
+                    setReplyBody('');
+                    setShowReplyBox(null);
+                    dispatch(fetchRepliesByCommentId(commentId)); // Fetch the replies again to update the local state
+                });
+        }
+    };
+
+    const handleReplyEditSubmit = (id) => {
+        if (replyEditBody.trim()) {
+            dispatch(updateReply(id, { body: replyEditBody }));
+            setReplyEditId(null);
+            setReplyEditBody('');
+        }
+    };
+
+    const handleEditClick = (comment) => {
+        setEditId(comment.id);
+        setEditBody(comment.body);
+    };
+
+    const handleReplyEditClick = (reply) => {
+        setReplyEditId(reply.id);
+        setReplyEditBody(reply.body);
+    };
+
+    const handleDeleteClick = (id) => {
+        dispatch(deleteComment(id));
+    };
+
+    const handleReplyDeleteClick = (id) => {
+        dispatch(deleteReply(id));
+    };
+
+    const handleShowReplyBox = (commentId) => {
+        setShowReplyBox(commentId);
+        if (!replyComments[commentId]) {
+            dispatch(fetchRepliesByCommentId(commentId));
+        }
+    };
+
     return (
         <div className='mb-96'>
             <div className='flex gap-1'>
                 <img
                     className='w-9 h-9 rounded-full'
-                    src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1" alt="" />
-                <div className='flex gap-4 w-4/6  text-[#6E75D1FF] shadow-sm border items-center px-6 py-4 rounded'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
-                    </svg>
+                    src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1"
+                    alt="User Avatar"
+                />
+                <div className='flex gap-4 w-4/6 text-[#6E75D1FF] shadow-sm border items-center px-6 py-4 rounded'>
                     <div className="relative flex items-center w-full">
-
                         <textarea
                             className="w-full bg-[#F3F4F6FF] text-neutral-600 overflow-hidden text-sm rounded-xl p-2 pl-8 border border-gray-300 focus:border-blue-500 focus:outline-none"
                             placeholder="Leave a comment"
-                            name=""
-                            id=""
-                            value={content}
+                            value={body}
                             ref={textareaRef}
                             onChange={handleInputChange}
-                            style={{ resize: 'none' }} // Prevent manual resizing
+                            style={{resize: 'none'}} // Prevent manual resizing
                         />
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="w-6 h-6 absolute right-2 text-black "
+                        <button
+                            className="absolute right-2 text-white bg-blue-500 px-3 py-1 rounded-md focus:outline-none hover:bg-blue-600"
+                            onClick={handleCommentSubmit}
                         >
-                            <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm4.314.634c.108-.215.395-.634.936-.634.54 0 .828.419.936.634.13.26.189.568.189.866 0 .298-.059.605-.189.866-.108.215-.395.634-.936.634-.54 0-.828-.419-.936-.634a1.96 1.96 0 0 1-.189-.866c0-.298.059-.605.189-.866Zm2.023 6.828a.75.75 0 1 0-1.06-1.06 3.75 3.75 0 0 1-5.304 0 .75.75 0 0 0-1.06 1.06 5.25 5.25 0 0 0 7.424 0Z" clipRule="evenodd" />
-                        </svg>
+                            Submit
+                        </button>
                     </div>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-
-                        class="w-6 h-6 ">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                    </svg>
-
-
-
-
                 </div>
             </div>
 
             <div className="bg-gray-50 mt-6 w-9/12 px-6 py-4">
-                <div className='mb-12'>
-
-                    <div className='flex gap-2 font-sans'>
-
-                        <img
-                            className='w-9 h-9 rounded-full'
-                            src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1" alt="" />
-                        <span className='font-semibold text-sm'>Lucifer</span>
-                        <span className='text-neutral-600 text-[12px]'>12:03 PM</span>
-                    </div>
-                    <p className='p-4 text-[#323842FF] text-sm' >Deserunt minim incididunt cillum nostrud do voluptate excepteur excepteur minim ex minim est laborum labore. Mollit commodo in do dolor ut in mollit est sint esse nostrud ipsum laboris incididunt nulla officia sunt minim. Nisi dolore velit ea occaecat labore minim ea do. </p>
-
-                    <div className='flex gap-4 font-sans text-sm'>
-                        <span className='text-white bg-purple-violet p-2 font-bold rounded cursor-pointer'>Like</span>
-                        <span className='p-2 text-purple-violet cursor-pointer'>Reply </span>
-                    </div>
-                </div>
-                {/*  */}
-                <div>
-
-                    <div className='flex gap-2 font-sans'>
-
-                        <img
-                            className='w-9 h-9 rounded-full'
-                            src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1" alt="" />
-                        <span className='font-semibold text-sm'>Lucifer</span>
-                        <span className='text-neutral-600 text-[12px]'>12:03 PM</span>
-                    </div>
-                    <p className='p-4 text-[#323842FF] text-sm' >Deserunt minim incididunt cillum nostrud do voluptate excepteur excepteur minim ex minim est laborum labore. Mollit commodo in do dolor ut in mollit est sint esse nostrud ipsum laboris incididunt nulla officia sunt minim. Nisi dolore velit ea occaecat labore minim ea do. </p>
-
-                    <div className='flex gap-4 font-sans text-sm'>
-                        <span className='text-white bg-purple-violet p-2 font-bold rounded cursor-pointer'>Like</span>
-                        <span className='p-2 text-purple-violet cursor-pointer'>Reply </span>
-                    </div>
-                    <div className='ml-8 my-12'>
+                {Array.isArray(comments) && comments.length > 0 ? comments.map((comment) => (
+                    <div className='mb-12' key={comment.id}>
                         <div className='flex gap-2 font-sans'>
-
                             <img
                                 className='w-9 h-9 rounded-full'
-                                src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1" alt="" />
-                            <span className='font-semibold text-sm'>Lucifer</span>
-                            <span className='text-neutral-600 text-[12px]'>12:03 PM</span>
+                                src={comment.user.avatar || "https://img.freepik.com/premium-vector/flat-2d-young-male-icon-design_703262-395.jpg?size=626&ext=jpg"}  // Assume user has an avatar property
+                                alt={comment.user.name}  // Assume user has a name property
+                            />
+                            <span className='font-semibold text-sm'>{comment.user.name}</span>
+                            <span className='text-neutral-600 text-[12px]'>{formatDate(comment.created_at)}</span>
                         </div>
-                        <p className='p-4 text-[#323842FF] text-sm' >Deserunt minim incididunt cillum nostrud do voluptate excepteur excepteur minim ex minim est laborum labore. Mollit commodo in do dolor ut in mollit est sint esse nostrud ipsum laboris incididunt nulla officia sunt minim. Nisi dolore velit ea occaecat labore minim ea do. </p>
-
+                        {editId === comment.id ? (
+                            <div>
+                                <textarea
+                                    className='w-full p-2 border rounded'
+                                    value={editBody}
+                                    onChange={handleEditChange}
+                                />
+                                <button
+                                    className='text-white bg-blue-500 px-3 py-1 rounded-md focus:outline-none hover:bg-blue-600'
+                                    onClick={() => handleEditSubmit(comment.id)}
+                                >
+                                    Save
+                                </button>
+                                <button
+                                    className='text-white bg-gray-500 px-3 py-1 rounded-md focus:outline-none hover:bg-gray-600 ml-2'
+                                    onClick={() => {
+                                        setEditId(null);
+                                        setEditBody('');
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : (
+                            <p className='p-4 text-[#323842FF] text-sm'>{comment.body}</p>
+                        )}
                         <div className='flex gap-4 font-sans text-sm'>
                             <span className='text-white bg-purple-violet p-2 font-bold rounded cursor-pointer'>Like</span>
-                            <span className='p-2 text-purple-violet cursor-pointer'>Reply </span>
+                            <span className='p-2 text-purple-violet cursor-pointer' onClick={() => handleShowReplyBox(comment.id)}>Reply</span>
+                            {(comment.user.id === userId || userRole === 'ADMIN') && (
+                                <>
+                                    <span className='p-2 text-blue-500 cursor-pointer' onClick={() => handleEditClick(comment)}>Edit</span>
+                                    <span className='p-2 text-red-500 cursor-pointer' onClick={() => handleDeleteClick(comment.id)}>Delete</span>
+                                </>
+                            )}
+                        </div>
+                        {showReplyBox === comment.id && (
+                            <div className='mt-4'>
+                                <textarea
+                                    className='w-full p-2 border rounded'
+                                    value={replyBody}
+                                    onChange={handleReplyChange}
+                                    placeholder="Write a reply..."
+                                />
+                                <button
+                                    className='text-white bg-blue-500 px-3 py-1 rounded-md focus:outline-none hover:bg-blue-600'
+                                    onClick={() => handleReplySubmit(comment.id)}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        )}
+                        <div className='mt-4 ml-8'>
+                            {comment.replyComments && comment.replyComments.map(reply => (
+                                <div key={reply.id} className='mb-4'>
+                                    <div className='flex gap-2 font-sans'>
+                                        <img
+                                            className='w-6 h-6 rounded-full'
+                                            src={reply.user.avatar || "https://img.freepik.com/premium-vector/flat-2d-young-male-icon-design_703262-395.jpg?size=626&ext=jpg"}
+                                            alt={reply.user.name}
+                                        />
+                                        <span className='font-semibold text-sm'>{reply.user.name}</span>
+                                        <span className='text-neutral-600 text-[12px]'>{formatDate(reply.created_at)}</span>
+                                    </div>
+                                    {replyEditId === reply.id ? (
+                                        <div>
+                                            <textarea
+                                                className='w-full p-2 border rounded'
+                                                value={replyEditBody}
+                                                onChange={handleReplyEditChange}
+                                            />
+                                            <button
+                                                className='text-white bg-blue-500 px-3 py-1 rounded-md focus:outline-none hover:bg-blue-600'
+                                                onClick={() => handleReplyEditSubmit(reply.id)}
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                className='text-white bg-gray-500 px-3 py-1 rounded-md focus:outline-none hover:bg-gray-600 ml-2'
+                                                onClick={() => {
+                                                    setReplyEditId(null);
+                                                    setReplyEditBody('');
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className='pl-8 text-[#323842FF] text-sm'>{reply.body}</p>
+                                    )}
+                                    <div className='flex gap-4 font-sans text-sm'>
+                                        {(reply.user.id === userId || userRole === 'ADMIN') && (
+                                            <>
+                                                <span className='p-2 text-blue-500 cursor-pointer' onClick={() => handleReplyEditClick(reply)}>Edit</span>
+                                                <span className='p-2 text-red-500 cursor-pointer' onClick={() => handleReplyDeleteClick(reply.id)}>Delete</span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                </div>
-
-
-                <div>
-
-                    <div className='flex gap-2 font-sans'>
-
-                        <img
-                            className='w-9 h-9 rounded-full'
-                            src="https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1" alt="" />
-                        <span className='font-semibold text-sm'>Lucifer</span>
-                        <span className='text-neutral-600 text-[12px]'>12:03 PM</span>
-                    </div>
-                    <p className='p-4 text-[#323842FF] text-sm' >Deserunt minim incididunt cillum nostrud do voluptate excepteur excepteur minim ex minim est laborum labore. Mollit commodo in do dolor ut in mollit est sint esse nostrud ipsum laboris incididunt nulla officia sunt minim. Nisi dolore velit ea occaecat labore minim ea do. </p>
-
-                    <div className='flex gap-4 font-sans text-sm'>
-                        <span className='text-white bg-purple-violet p-2 font-bold rounded cursor-pointer'>Like</span>
-                        <span className='p-2 text-purple-violet cursor-pointer'>Reply </span>
-                    </div>
-                </div>
-
+                )) : <p>No comments available.</p>}
             </div>
-
-
-
-
-
         </div>
-    )
-}
+    );
+};
 
-export default Disscussion
+export default Discussion;

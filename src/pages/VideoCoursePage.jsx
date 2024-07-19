@@ -12,6 +12,7 @@ const VideoCoursePage = () => {
     const user = useSelector(state => state?.auth?.user);
     const dispatch = useDispatch();
     const { id } = useParams();
+    console.log(studentSessions);
 
     useEffect(() => {
         if (id && user?.id) {

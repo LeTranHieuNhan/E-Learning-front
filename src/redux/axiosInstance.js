@@ -3,7 +3,7 @@ import axios from 'axios';
 const instance = axios.create({
     baseURL: 'http://localhost:8080/api/v1',
     headers: {
-        // You can set default headers here if needed
+        'Content-Type': 'application/json' // Set Content-Type to application/json
     }
 });
 
