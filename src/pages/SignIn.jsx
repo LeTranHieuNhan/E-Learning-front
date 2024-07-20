@@ -1,43 +1,20 @@
-import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-
-import {loginFailure, loginRequest, loginSuccess} from "../redux/authActions.js";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/authActions.js';
 
 const SignIn = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const { loading, error } = useSelector(state => state.auth);
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent form default submission
-        dispatch(loginRequest());
-
-        try {
-            const response = await fetch("http://localhost:8080/api/v1/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-            localStorage.setItem('token', data.token);
-
-
-            if (!response.ok) {
-                throw new Error(data.message || "Login failed");
-            }
-
-            dispatch(loginSuccess(data.token));
-            navigate("/"); // Navigate to the homepage or a protected route
-        } catch (error) {
-            dispatch(loginFailure(error.message));
-        }
+        e.preventDefault();
+        await dispatch(login(email, password));
+        navigate('/');
     };
 
     const handleMouseDown = () => {
@@ -47,6 +24,7 @@ const SignIn = () => {
     const handleMouseUp = () => {
         setPasswordVisible(false);
     };
+
     return (
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -81,7 +59,6 @@ const SignIn = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-
                             />
                         </div>
                     </div>
@@ -90,7 +67,6 @@ const SignIn = () => {
                         <div className="flex items-center justify-between">
                             <label
                                 htmlFor="password"
-
                                 className="block text-sm font-medium leading-6 text-gray-900"
                             >
                                 Password
@@ -101,7 +77,7 @@ const SignIn = () => {
                                 id="password"
                                 name="password"
                                 onChange={(e) => setPassword(e.target.value)}
-                                type={passwordVisible ? "text" : "password"}
+                                type={passwordVisible ? 'text' : 'password'}
                                 autoComplete="current-password"
                                 required
                                 className="block w-full rounded-md p-2 border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -115,7 +91,7 @@ const SignIn = () => {
                                 onMouseUp={handleMouseUp}
                                 onMouseLeave={handleMouseUp}
                             >
-                                <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                                <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
                                 <path
                                     fillRule="evenodd"
                                     d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
@@ -139,10 +115,7 @@ const SignIn = () => {
                                 </label>
                             </div>
                             <div className="text-sm">
-                                <a
-                                    href="#"
-                                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                                >
+                                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
                                     Forgot password?
                                 </a>
                             </div>
@@ -177,89 +150,28 @@ const SignIn = () => {
                             ></path>
                             <path
                                 fill="#518ef8"
-                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-45.025 65.646-77.911h-136.89V208.176h245.899z"
+                                d="M507.527 208.176C509.348 217.047 510.346 226.451 510.346 236c0 9.958-1.12 19.682-3.156 29.056-6.971 32.917-24.502 61.666-48.195 82.362l-.014-.014-68.615-3.5-9.698-64.504c13.93-8.243 25.649-19.618 33.569-33.036H261.539v-82.364h246.973z"
                             ></path>
                             <path
                                 fill="#28b446"
-                                d="m416.253 455.624.014.014C372.396 490.901 316.666 512 256 512c-97.491 0-182.252-54.491-225.491-134.681l82.961-67.91c21.619 57.698 77.278 98.771 142.53 98.771 28.047 0 54.323-7.582 76.87-20.818l83.383 68.262z"
+                                d="M459.016 347.418 459.03 347.432c-43.286 38.654-99.954 62.274-162.058 62.274-62.805 0-119.08-23.584-162.231-62.145l-.014-.014 69.375-56.837c19.529 13.662 43.63 21.833 69.007 21.833 26.78 0 51.706-9.225 71.088-24.888l69.543 59.287z"
                             ></path>
                             <path
                                 fill="#f14336"
-                                d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
+                                d="M113.047 309.252-.001 148.268 69.372 91.43l69.053 56.648c18.812-14.379 41.775-25.597 66.952-32.132 15.565-4.008 31.982-6.2 49.055-6.2 61.568 0 115.94 23.763 158.05 62.555l-68.003 66.332c-18.641-14.399-42.366-23.057-67.775-23.057-26.933 0-51.509 9.686-70.561 25.853L113.047 309.252z"
                             ></path>
                         </svg>
-                        {" "}
-                    </button>
-                    <button
-                        type="button"
-                        className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-[18px] hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
-                            className="w-4"
-                            id="google"
-                        >
-                            <path
-                                fill="#fbbb00"
-                                d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
-                            ></path>
-                            <path
-                                fill="#518ef8"
-                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-45.025 65.646-77.911h-136.89V208.176h245.899z"
-                            ></path>
-                            <path
-                                fill="#28b446"
-                                d="m416.253 455.624.014.014C372.396 490.901 316.666 512 256 512c-97.491 0-182.252-54.491-225.491-134.681l82.961-67.91c21.619 57.698 77.278 98.771 142.53 98.771 28.047 0 54.323-7.582 76.87-20.818l83.383 68.262z"
-                            ></path>
-                            <path
-                                fill="#f14336"
-                                d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
-                            ></path>
-                        </svg>
-                        {" "}
-                    </button>
-                    {" "}
-                    <button
-                        type="button"
-                        className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-[18px] hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
-                            className="w-4"
-                            id="google"
-                        >
-                            <path
-                                fill="#fbbb00"
-                                d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
-                            ></path>
-                            <path
-                                fill="#518ef8"
-                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-45.025 65.646-77.911h-136.89V208.176h245.899z"
-                            ></path>
-                            <path
-                                fill="#28b446"
-                                d="m416.253 455.624.014.014C372.396 490.901 316.666 512 256 512c-97.491 0-182.252-54.491-225.491-134.681l82.961-67.91c21.619 57.698 77.278 98.771 142.53 98.771 28.047 0 54.323-7.582 76.87-20.818l83.383 68.262z"
-                            ></path>
-                            <path
-                                fill="#f14336"
-                                d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
-                            ></path>
-                        </svg>
-                        {" "}
+                        Sign in with Google
                     </button>
                 </div>
 
-                <p className="mt-28 text-center text-sm text-gray-500 ">
-                    Don't have an account?
-                    <Link to="/SignUp">
-                        <a
-                            href="#"
-                            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
-                        >
-                            Sign up
-                        </a>
+                <p className="mt-10 text-center text-sm text-gray-500">
+                    Not a member?{' '}
+                    <Link
+                        to="/signup"
+                        className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                    >
+                        Register Now
                     </Link>
                 </p>
             </div>

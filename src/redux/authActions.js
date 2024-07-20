@@ -63,3 +63,51 @@ export const getUserByTokenAction = (token) => {
         }
     };
 };
+
+export const registerUser = (username, email, password) => {
+    return async (dispatch) => {
+        dispatch(registerRequest());
+
+        try {
+            const response = await axios.post("http://localhost:8080/api/v1/auth/register", {
+                username,
+                email,
+                password,
+            });
+
+            if (response.status !== 200) {
+                throw new Error('Registration failed');
+            }
+
+            const data = response.data;
+            dispatch(registerSuccess(data.user));
+        } catch (error) {
+            dispatch(registerFailure(error.message));
+        }
+    };
+};
+export const login = (email, password) => {
+    return async (dispatch) => {
+        dispatch(loginRequest());
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+            localStorage.setItem('token', data.token);
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+
+            dispatch(loginSuccess(data.token));
+        } catch (error) {
+            dispatch(loginFailure(error.message));
+        }
+    };
+};

@@ -1,40 +1,20 @@
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {registerFailure, registerRequest, registerSuccess} from "../redux/authActions.js";
-import {useNavigate} from "react-router-dom";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {registerUser} from "../redux/authActions.js";
 
-const SignIn = () => {
+const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(registerRequest());
-
-        try {
-            // You need to implement your registration API call here
-            const response = await fetch("http://localhost:8080/api/v1/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({username, email, password}),
-            });
-
-            if (!response.ok) {
-                throw new Error("Registration failed");
-            }
-
-            const data = await response.json();
-            dispatch(registerSuccess(data.user));
-            navigate("/")
-
-        } catch (error) {
-            dispatch(registerFailure(error.message));
-        }
+        await dispatch(registerUser(username, email, password));
+        navigate('/');
     };
 
     const handleMouseDown = () => {
@@ -61,7 +41,7 @@ const SignIn = () => {
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <div>
                     <label
-                        htmlFor="email"
+                        htmlFor="username"
                         className="block text-sm font-medium leading-6 text-gray-900"
                     >
                         Username
@@ -163,18 +143,18 @@ const SignIn = () => {
                             ></path>
                             <path
                                 fill="#518ef8"
-                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-45.025 65.646-77.911h-136.89V208.176h245.899z"
+                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-44.732 66.029-77.327H261.538V208.176h246.009z"
                             ></path>
                             <path
                                 fill="#28b446"
-                                d="m416.253 455.624.014.014C372.396 490.901 316.666 512 256 512c-97.491 0-182.252-54.491-225.491-134.681l82.961-67.91c21.619 57.698 77.278 98.771 142.53 98.771 28.047 0 54.323-7.582 76.87-20.818l83.383 68.262z"
+                                d="M416.537 455.638 416.551 455.652c-41.424 33.797-94.01 54.348-151.013 54.348-86.221 0-162.075-48.264-200.14-118.982l73.239-59.939c20.083 43.693 64.535 74.362 115.526 74.362 23.197 0 45.03-6.174 63.494-16.9l98.897 67.159z"
                             ></path>
                             <path
                                 fill="#f14336"
-                                d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
+                                d="M419.404 58.531l-73.224 59.939c-20.083-13.749-43.963-21.851-69.646-21.851-51.398 0-95.014 32.431-111.259 77.747l-73.423-60.168h-.014C119.33 55.835 187.447 16 266.534 16c57.585 0 110.046 21.775 150.46 57.812l2.41 1.719z"
                             ></path>
                         </svg>
-                        {" "}
+                        Google
                     </button>
                     <button
                         type="button"
@@ -182,68 +162,22 @@ const SignIn = () => {
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
+                            viewBox="0 0 310 310"
+                            fill="currentColor"
                             className="w-4"
-                            id="google"
+                            id="facebook"
                         >
                             <path
-                                fill="#fbbb00"
-                                d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
-                            ></path>
-                            <path
-                                fill="#518ef8"
-                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-45.025 65.646-77.911h-136.89V208.176h245.899z"
-                            ></path>
-                            <path
-                                fill="#28b446"
-                                d="m416.253 455.624.014.014C372.396 490.901 316.666 512 256 512c-97.491 0-182.252-54.491-225.491-134.681l82.961-67.91c21.619 57.698 77.278 98.771 142.53 98.771 28.047 0 54.323-7.582 76.87-20.818l83.383 68.262z"
-                            ></path>
-                            <path
-                                fill="#f14336"
-                                d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
+                                d="M302.125 0H7.875A7.878 7.878 0 0 0 0 7.875v294.25A7.878 7.878 0 0 0 7.875 310h158.204V190.021h-43.1v-49.213h43.1V106.29c0-42.661 26.068-65.846 64.178-65.846 18.262 0 33.953 1.358 38.529 1.961v44.662h-26.421c-20.706 0-24.706 9.841-24.706 24.282v31.791h49.48l-6.443 49.213h-43.037V310h84.51A7.878 7.878 0 0 0 310 302.125V7.875A7.878 7.878 0 0 0 302.125 0z"
                             ></path>
                         </svg>
-                        {" "}
-                    </button>
-                    {" "}
-                    <button
-                        type="button"
-                        className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-[18px] hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
-                            className="w-4"
-                            id="google"
-                        >
-                            <path
-                                fill="#fbbb00"
-                                d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
-                            ></path>
-                            <path
-                                fill="#518ef8"
-                                d="M507.527 208.176C510.467 223.662 512 239.655 512 256c0 18.328-1.927 36.206-5.598 53.451-12.462 58.683-45.025 109.925-90.134 146.187l-.014-.014-73.044-3.727-10.338-64.535c29.932-17.554 53.324-45.025 65.646-77.911h-136.89V208.176h245.899z"
-                            ></path>
-                            <path
-                                fill="#28b446"
-                                d="m416.253 455.624.014.014C372.396 490.901 316.666 512 256 512c-97.491 0-182.252-54.491-225.491-134.681l82.961-67.91c21.619 57.698 77.278 98.771 142.53 98.771 28.047 0 54.323-7.582 76.87-20.818l83.383 68.262z"
-                            ></path>
-                            <path
-                                fill="#f14336"
-                                d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
-                            ></path>
-                        </svg>
-                        {" "}
+                        Facebook
                     </button>
                 </div>
-
-                <p className="mt-28 text-center text-sm text-gray-500 ">
-                    Don't have an account?
-                    <a
-                        href="#"
-                        className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
-                    >
-                        Sign up
+                <p className="mt-10 text-center text-sm text-gray-500">
+                    Already have an account?{' '}
+                    <a href="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                        Sign in
                     </a>
                 </p>
             </div>
@@ -251,4 +185,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default SignUp;
