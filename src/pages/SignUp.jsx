@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {registerUser} from "../redux/authActions.js";
+import { registerUser } from "../redux/authActions.js";
 
 const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);

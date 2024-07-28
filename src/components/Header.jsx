@@ -36,7 +36,10 @@ const Header = () => {
                     <ul className="flex gap-8 ">
                         <li className="menu-item">Home</li>
                         <li className="menu-item">My courses</li>
+                        <a href={"http://localhost:3000/DashboardHome"}>
+
                         <li className="menu-item"> Dashboard</li>
+                        </a>
                         <li className="menu-item">Promotions</li>
                         <li className="menu-item">Support</li>
 

@@ -1,4 +1,3 @@
-// replyCommentActions.js
 import axiosInstance from "./axiosInstance.js";
 import * as actionTypes from "./actionTypes.js";
 
@@ -44,7 +43,7 @@ export const deleteReplyFailure = (error) => ({
 
 export const fetchRepliesByCommentId = (commentId) => {
     return dispatch => {
-        axiosInstance.get(`/reply_comments/comment/${commentId}`)
+        return axiosInstance.get(`/reply_comments/comment/${commentId}`)
             .then(response => dispatch(fetchRepliesSuccess(response.data)))
             .catch(error => dispatch(fetchRepliesFailure(error.message)));
     };
@@ -58,7 +57,7 @@ export const createReply = (replyDto, commentId, userId) => {
             user: { id: userId }
         };
 
-        axiosInstance.post(`/reply_comments/comment/${commentId}/user/${userId}`, payload)
+        return axiosInstance.post(`/reply_comments/comment/${commentId}/user/${userId}`, payload)
             .then(response => dispatch(createReplySuccess(response.data)))
             .catch(error => dispatch(createReplyFailure(error.message)));
     };
@@ -66,7 +65,7 @@ export const createReply = (replyDto, commentId, userId) => {
 
 export const updateReply = (id, replyDto) => {
     return dispatch => {
-        axiosInstance.put(`/reply_comments/${id}`, replyDto)
+        return axiosInstance.put(`/reply_comments/${id}`, replyDto)
             .then(response => dispatch(updateReplySuccess(response.data)))
             .catch(error => dispatch(updateReplyFailure(error.message)));
     };
@@ -74,7 +73,7 @@ export const updateReply = (id, replyDto) => {
 
 export const deleteReply = (id) => {
     return dispatch => {
-        axiosInstance.delete(`/reply_comments/${id}`)
+        return axiosInstance.delete(`/reply_comments/${id}`)
             .then(() => dispatch(deleteReplySuccess(id)))
             .catch(error => dispatch(deleteReplyFailure(error.message)));
     };

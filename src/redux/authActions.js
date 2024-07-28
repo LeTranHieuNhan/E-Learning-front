@@ -15,9 +15,9 @@ export const registerRequest = () => ({
     type: REGISTER_REQUEST,
 });
 
-export const registerSuccess = (user) => ({
+export const registerSuccess = (token) => ({
     type: REGISTER_SUCCESS,
-    payload: user,
+    payload: token,
 });
 
 export const registerFailure = (error) => ({
@@ -49,59 +49,56 @@ export  const getUserByToken = (token) => ({
 export const getUserByTokenAction = (token) => {
     return async (dispatch) => {
         try {
-            console.log(token)
+            console.log(token);
             const response = await axios.get(`http://localhost:8080/api/v1/auth/${token}`);
             const userData = response.data; // Assuming the API returns user data
             dispatch({
                 type: GET_USER_BY_TOKEN,
-                payload: userData
+                payload: userData,
             });
         } catch (error) {
-            // Handle error if the API request fails
             console.error('Error fetching user by token:', error);
-            // You might dispatch an action to update the error state in Redux if needed
         }
     };
 };
 
-export const registerUser = (username, email, password) => {
+export const registerUser = (name, email, password) => {
     return async (dispatch) => {
         dispatch(registerRequest());
 
         try {
             const response = await axios.post("http://localhost:8080/api/v1/auth/register", {
-                username,
                 email,
                 password,
+                name,
             });
+            console.log(response.data)
 
-            if (response.status !== 200) {
-                throw new Error('Registration failed');
-            }
 
-            const data = response.data;
-            dispatch(registerSuccess(data.user));
+            const data = response.data; // axios automatically parses JSON
+            console.log(data.token);
+            localStorage.setItem('token', data.token);
+
+            dispatch(registerSuccess(data.token));
         } catch (error) {
             dispatch(registerFailure(error.message));
         }
     };
 };
+
 export const login = (email, password) => {
     return async (dispatch) => {
         dispatch(loginRequest());
         try {
-            const response = await fetch('http://localhost:8080/api/v1/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
+            const response = await axios.post('http://localhost:8080/api/v1/auth/login', {
+                email,
+                password,
             });
 
-            const data = await response.json();
+            const data = response.data;
             localStorage.setItem('token', data.token);
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error(data.message || 'Login failed');
             }
 

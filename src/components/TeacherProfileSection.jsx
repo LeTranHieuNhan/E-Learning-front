@@ -5,7 +5,6 @@ const TeacherProfileSection = ({user}) => {
 
 
 
-
     return (
         <div className=" flex  flex-col  bg-whitesmokle border shadow-sm p-7 ">
 
@@ -13,7 +12,7 @@ const TeacherProfileSection = ({user}) => {
                 <div>
 
                     <div className="flex gap-4">
-                        <img src={user?.avatar} alt="" className="bg-[#FFD5C3FF] w-24 h-24 rounded-full"/>
+                        <img src={user?.avatar || "https://i.pravatar.cc/300" } alt="" className="bg-[#FFD5C3FF] w-24 h-24 rounded-full"/>
                         <div className="font-sans ">
                             <h2 className="text-xl font-bold font-sora">{user?.name}</h2>
                             <span className="text-sm text-neutral-700">{user?.role?.name}</span>

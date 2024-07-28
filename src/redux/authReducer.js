@@ -1,4 +1,3 @@
-// authReducer.js
 import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -7,7 +6,7 @@ import {
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
     REGISTER_FAILURE,
-    GET_USER_BY_TOKEN
+    GET_USER_BY_TOKEN,
 } from './authActions';
 
 const initialState = {
@@ -15,7 +14,7 @@ const initialState = {
     token: localStorage.getItem('token'),
     error: null,
     isAuthenticated: !!localStorage.getItem('token'), // Initialize isAuthenticated based on token presence
-    user : null
+    user: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -32,7 +31,7 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                token: action.payload.token,
+                token: action.payload,
                 error: null,
                 isAuthenticated: true, // User is authenticated on successful login or registration
             };

@@ -41,7 +41,7 @@ const CourseVideoComponent = () => {
 
     return (
         <div>
-            <div className='flex justify-between'>
+            <div className='flex justify-between    '>
                 <div>
                     <h2 className="font-sora text-[32px] font-bold text-neutral-900">{currentSession?.title}</h2>
                     <div className="text-sm font-sans flex gap-2">

@@ -1,4 +1,3 @@
-// userActions.js
 import * as actionTypes from './actionTypes';
 import axiosInstance from './axiosInstance';
 
@@ -21,23 +20,17 @@ export const fetchUser = () => {
     };
 };
 
-// Create user
-export const createUserSuccess = (user) => ({
-    type: actionTypes.CREATE_USER_SUCCESS,
-    user
-});
+// Fetch user by ID
 export const fetchUserByIdSuccess = (user) => ({
     type: actionTypes.FETCH_USER_BY_ID_SUCCESS,
     user
 });
 
-// Action creator for failed user fetch by ID
 export const fetchUserByIdFailure = (error) => ({
     type: actionTypes.FETCH_USER_BY_ID_FAILURE,
     error
 });
 
-// Thunk for fetching user by ID
 export const fetchUserById = (userId) => {
     return dispatch => {
         axiosInstance.get(`/users/${userId}`)
@@ -45,6 +38,13 @@ export const fetchUserById = (userId) => {
             .catch(error => dispatch(fetchUserByIdFailure(error.message)));
     };
 };
+
+// Create user
+export const createUserSuccess = (user) => ({
+    type: actionTypes.CREATE_USER_SUCCESS,
+    user
+});
+
 export const createUserFailure = (error) => ({
     type: actionTypes.CREATE_USER_FAILURE,
     error
@@ -69,11 +69,14 @@ export const updateUserFailure = (error) => ({
     error
 });
 
-export const updateUser = (userId, userData) => {
-    return dispatch => {
-        axiosInstance.put(`/users/${userId}`, userData)
-            .then(response => dispatch(updateUserSuccess(response.data)))
-            .catch(error => dispatch(updateUserFailure(error.message)));
+export const updateUser = (id, user, roleId) => {
+    return async dispatch => {
+        try {
+            const response = await axiosInstance.put(`/users/${id}?roleId=${roleId}`, user);
+            dispatch(updateUserSuccess(response.data));
+        } catch (error) {
+            dispatch(updateUserFailure(error.message));
+        }
     };
 };
 
@@ -100,6 +103,8 @@ export const deleteUser = (userId) => {
 export const logoutUser = () => ({
     type: actionTypes.LOGOUT_USER
 });
+
+// Fetch teacher profile
 export const fetchTeacherProfileSuccess = (user) => ({
     type: actionTypes.FETCH_TEACHER_PROFILE_SUCCESS,
     user

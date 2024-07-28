@@ -1,4 +1,4 @@
-    import * as actionTypes from './actionTypes';
+import * as actionTypes from './actionTypes';
 import axiosInstance from "./axiosInstance.js";
 
 export const fetchCoursesSuccess = (courses) => {
@@ -33,6 +33,45 @@ export const getCourseById = (courseId) => {
         axiosInstance.get(`/courses/${courseId}`)
             .then(response => {
                 dispatch(getCourseByIdSuccess(response.data));
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+};
+export const fetchTeacherCoursesSuccess = (courses) => {
+    return {
+        type: actionTypes.FETCH_TEACHER_COURSES_SUCCESS,
+        courses
+    };
+};
+
+// Thunk action for fetching teacher courses by teacher ID
+export const fetchTeacherCourses = (teacherId) => {
+    return dispatch => {
+        axiosInstance.get(`/courses/teachers/${teacherId}`)
+            .then(response => {
+                dispatch(fetchTeacherCoursesSuccess(response.data));
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+}
+
+
+export const fetchUserEnrolledCoursesSuccess = (courses) => {
+    return {
+        type: actionTypes.FETCH_USER_ENROLLED_COURSES_SUCCESS,
+        courses
+    };
+};
+
+export const fetchUserEnrolledCourses = (userId) => {
+    return dispatch => {
+        axiosInstance.get(`/courses/user_enrolled/${userId}`)
+            .then(response => {
+                dispatch(fetchUserEnrolledCoursesSuccess(response.data));
             })
             .catch(error => {
                 console.log(error);

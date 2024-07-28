@@ -15,21 +15,35 @@ const Discussion = () => {
     const [replyEditBody, setReplyEditBody] = useState('');
     const [replyEditId, setReplyEditId] = useState(null);
     const [showReplyBox, setShowReplyBox] = useState(null);
+    const [replyComments, setReplyComments] = useState({});
     const textareaRef = useRef(null);
     const dispatch = useDispatch();
     const comments = useSelector(state => state?.course?.comment?.comments || []);
     const courseSessionId = useSelector(state => state?.course?.studentSession?.studentSessions[0]?.courseSession?.id);
     const userId = useSelector(state => state?.auth?.user?.id);
     const userRole = useSelector(state => state?.auth?.user?.role);
-    const replyComments = useSelector(state => state?.course?.replyComment?.replies || {});
-    console.log(replyComments);
-    console.log(comments);
 
     useEffect(() => {
         if (courseSessionId) {
             dispatch(fetchComments(courseSessionId));
         }
     }, [dispatch, courseSessionId]);
+
+    useEffect(() => {
+        const fetchReplies = async () => {
+            const replies = {};
+            for (const comment of comments) {
+                const response = await dispatch(fetchRepliesByCommentId(comment.id));
+                if (response.payload) {
+                    replies[comment.id] = response.payload;
+                }
+            }
+            setReplyComments(replies);
+        };
+        if (comments.length > 0) {
+            fetchReplies();
+        }
+    }, [dispatch, comments]);
 
     const handleInputChange = (event) => {
         setBody(event.target.value);
@@ -54,7 +68,7 @@ const Discussion = () => {
         }
     }, [body]);
 
-    const handleCommentSubmit = () => {
+    const handleCommentSubmit = async () => {
         if (!courseSessionId || !userId) {
             alert('Course session ID or user ID is missing.');
             return;
@@ -62,20 +76,22 @@ const Discussion = () => {
 
         if (body.trim()) {
             const newComment = { body };
-            dispatch(createComment(newComment, courseSessionId, userId));
+            await dispatch(createComment(newComment, courseSessionId, userId));
             setBody('');
+            dispatch(fetchComments(courseSessionId));
         }
     };
 
-    const handleEditSubmit = (id) => {
+    const handleEditSubmit = async (id) => {
         if (editBody.trim()) {
-            dispatch(updateComment(id, { body: editBody }));
+            await dispatch(updateComment(id, { body: editBody }));
             setEditId(null);
             setEditBody('');
+            dispatch(fetchComments(courseSessionId));
         }
     };
 
-    const handleReplySubmit = (commentId) => {
+    const handleReplySubmit = async (commentId) => {
         if (!courseSessionId || !userId) {
             alert('Course session ID or user ID is missing.');
             return;
@@ -83,20 +99,31 @@ const Discussion = () => {
 
         if (replyBody.trim()) {
             const newReply = { body: replyBody };
-            dispatch(createReply(newReply, commentId, userId))
-                .then(() => {
-                    setReplyBody('');
-                    setShowReplyBox(null);
-                    dispatch(fetchRepliesByCommentId(commentId)); // Fetch the replies again to update the local state
-                });
+            await dispatch(createReply(newReply, commentId, userId));
+            setReplyBody('');
+            setShowReplyBox(null);
+            const response = await dispatch(fetchRepliesByCommentId(commentId));
+            if (response.payload) {
+                setReplyComments(prevState => ({
+                    ...prevState,
+                    [commentId]: response.payload
+                }));
+            }
         }
     };
 
-    const handleReplyEditSubmit = (id) => {
+    const handleReplyEditSubmit = async (id, commentId) => {
         if (replyEditBody.trim()) {
-            dispatch(updateReply(id, { body: replyEditBody }));
+            await dispatch(updateReply(id, { body: replyEditBody }));
             setReplyEditId(null);
             setReplyEditBody('');
+            const response = await dispatch(fetchRepliesByCommentId(commentId));
+            if (response.payload) {
+                setReplyComments(prevState => ({
+                    ...prevState,
+                    [commentId]: response.payload
+                }));
+            }
         }
     };
 
@@ -110,18 +137,32 @@ const Discussion = () => {
         setReplyEditBody(reply.body);
     };
 
-    const handleDeleteClick = (id) => {
-        dispatch(deleteComment(id));
+    const handleDeleteClick = async (id) => {
+        await dispatch(deleteComment(id));
+        dispatch(fetchComments(courseSessionId));
     };
 
-    const handleReplyDeleteClick = (id) => {
-        dispatch(deleteReply(id));
+    const handleReplyDeleteClick = async (id, commentId) => {
+        await dispatch(deleteReply(id));
+        const response = await dispatch(fetchRepliesByCommentId(commentId));
+        if (response.payload) {
+            setReplyComments(prevState => ({
+                ...prevState,
+                [commentId]: response.payload
+            }));
+        }
     };
 
-    const handleShowReplyBox = (commentId) => {
+    const handleShowReplyBox = async (commentId) => {
         setShowReplyBox(commentId);
         if (!replyComments[commentId]) {
-            dispatch(fetchRepliesByCommentId(commentId));
+            const response = await dispatch(fetchRepliesByCommentId(commentId));
+            if (response.payload) {
+                setReplyComments(prevState => ({
+                    ...prevState,
+                    [commentId]: response.payload
+                }));
+            }
         }
     };
 
@@ -141,7 +182,7 @@ const Discussion = () => {
                             value={body}
                             ref={textareaRef}
                             onChange={handleInputChange}
-                            style={{resize: 'none'}} // Prevent manual resizing
+                            style={{ resize: 'none' }} // Prevent manual resizing
                         />
                         <button
                             className="absolute right-2 text-white bg-blue-500 px-3 py-1 rounded-md focus:outline-none hover:bg-blue-600"
@@ -192,8 +233,7 @@ const Discussion = () => {
                             <p className='p-4 text-[#323842FF] text-sm'>{comment.body}</p>
                         )}
                         <div className='flex gap-4 font-sans text-sm'>
-                            <span className='text-white bg-purple-violet p-2 font-bold rounded cursor-pointer'>Like</span>
-                            <span className='p-2 text-purple-violet cursor-pointer' onClick={() => handleShowReplyBox(comment.id)}>Reply</span>
+                            <span className='p-2 bg-purple-violet cursor-pointer text-white rounded-lg ' onClick={() => handleShowReplyBox(comment.id)}>Reply</span>
                             {(comment.user.id === userId || userRole === 'ADMIN') && (
                                 <>
                                     <span className='p-2 text-blue-500 cursor-pointer' onClick={() => handleEditClick(comment)}>Edit</span>
@@ -218,7 +258,7 @@ const Discussion = () => {
                             </div>
                         )}
                         <div className='mt-4 ml-8'>
-                            {comment.replyComments && comment.replyComments.map(reply => (
+                            {replyComments[comment.id] && replyComments[comment.id].map(reply => (
                                 <div key={reply.id} className='mb-4'>
                                     <div className='flex gap-2 font-sans'>
                                         <img
@@ -238,7 +278,7 @@ const Discussion = () => {
                                             />
                                             <button
                                                 className='text-white bg-blue-500 px-3 py-1 rounded-md focus:outline-none hover:bg-blue-600'
-                                                onClick={() => handleReplyEditSubmit(reply.id)}
+                                                onClick={() => handleReplyEditSubmit(reply.id, comment.id)}
                                             >
                                                 Save
                                             </button>
@@ -259,7 +299,7 @@ const Discussion = () => {
                                         {(reply.user.id === userId || userRole === 'ADMIN') && (
                                             <>
                                                 <span className='p-2 text-blue-500 cursor-pointer' onClick={() => handleReplyEditClick(reply)}>Edit</span>
-                                                <span className='p-2 text-red-500 cursor-pointer' onClick={() => handleReplyDeleteClick(reply.id)}>Delete</span>
+                                                <span className='p-2 text-red-500 cursor-pointer' onClick={() => handleReplyDeleteClick(reply.id, comment.id)}>Delete</span>
                                             </>
                                         )}
                                     </div>

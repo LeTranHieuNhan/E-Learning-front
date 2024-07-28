@@ -46,7 +46,7 @@ const UserDropdown = ({handleLogout , user} ) => {
                 aria-expanded={isDropdownVisible}
                 onClick={toggleDropdown}
                 className="w-9 h-9 rounded-full cursor-pointer"
-                src={user?.avatar}
+                src={user?.avatar || "https://i.pravatar.cc/300" }
                 alt="User dropdown"
             />
 

@@ -6,6 +6,7 @@ import userReducer from "./userReducer.js";
 import studentSessionReducer from "./StudentSessionReducer.js";
 import commentReducer from "./commentReducer.js";
 import replyCommentReducer from "./replyCommentReducer.js";
+import {courseRatingReducer} from "./courseRatingReducer.js";
 
 const rootReducer = combineReducers({
     course: courseReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     studentSession: studentSessionReducer,
     comment: commentReducer,
     replyComment: replyCommentReducer,
+    courseRating: courseRatingReducer,
 
 });
 
